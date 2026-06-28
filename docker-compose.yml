@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: snippy
+      POSTGRES_PASSWORD: snippy
+      POSTGRES_DB: snippy
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations/001_create_links.sql:/docker-entrypoint-initdb.d/001_create_links.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U snippy"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: postgres://snippy:snippy@postgres:5432/snippy
+      PORT: "8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
