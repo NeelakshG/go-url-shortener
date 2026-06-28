@@ -1,5 +1,5 @@
 # ── Stage 1: build ──────────────────────────────────────────────────────────
-FROM golang:1.22-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
@@ -18,4 +18,4 @@ COPY --from=builder /app/snippy /snippy
 
 EXPOSE 8080
 
-ENTRYPOINT ["/snippy"]
+ENT
