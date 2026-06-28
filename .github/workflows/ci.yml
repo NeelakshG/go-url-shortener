@@ -15,12 +15,12 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version: "1.25"
 
-      # golangci-lint catches style issues, unused vars, shadowed errors, etc.
+      # golangci-lint v2 supports Go 1.25+
       - uses: golangci/golangci-lint-action@v6
         with:
-          version: latest
+          version: v2.1.6
 
   test:
     name: Test
@@ -30,7 +30,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version: "1.25"
 
       # testcontainers-go needs Docker — ubuntu-latest has it built in
       - name: Run tests
@@ -44,7 +44,7 @@ jobs:
 
       - uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version: "1.25"
 
       - name: Build binary
         run: CGO_ENABLED=0 go build -o snippy ./cmd/api
@@ -53,7 +53,7 @@ jobs:
       - name: Build Docker image
         run: docker build -t snippy:${{ github.sha }} .
 
-      # Trivy scans for known CVEs in the image — fails on CRITICAL findings
+      # Trivy scans for known CVEs — fails on CRITICAL findings
       - name: Trivy image scan
         uses: aquasecurity/trivy-action@master
         with:
